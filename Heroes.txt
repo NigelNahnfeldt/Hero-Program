@@ -1,0 +1,19 @@
+Louis Braille, 1,4,1809
+Alan Turing, 6,23,1912
+Charles Babbage, 12,26,1791
+Ada Lovelace, 12,10,1815
+Grace Hopper, 12, 9, 1906
+bad person, 1, 2
+Carl Linnaeus, 5,23,1707
+Albert Einsten, 3,14,1879
+Nikola Tesla, 7,10,1856
+Charles Darwin, 2,12,1809
+funny date, 3,r,1955
+William Shockley, 2,13,1910
+Karl Benz, 11,25,1844
+Bill Gates, 10,28,1955
+horrible person, 1, 2, 3, 4
+Carl Sagan, 11,9,1934
+Muhammad Ali, 1,17,1942
+
+
