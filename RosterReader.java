@@ -7,26 +7,27 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 import java.io.FileNotFoundException;
-import java.util.Calendar;
 
 /**
  * 
  * @author Nigel Nahnfeldt
  * @Version 1.0
+ * Read in from file
+ *  Counts how many lines are in file for size of array
+ *  Reads in hero one by one
  */
 
 public class RosterReader 
 {
     //Decleration of variables.
     private File fileToRead;
-
     private Scanner fileScanner;
-    
     private Hero currentHero;
-    
-    // firstly, we only need 1 scanner object
+    private char[] abc = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'};
         
-        //Constructor Method.
+        /*
+         * Constructor method
+         */
         public RosterReader(String filename)
         {
             fileToRead = new File(filename);
@@ -42,13 +43,16 @@ public class RosterReader
         }
         
         
-        //Method counts how many lines are within the read file.
+      /*
+       * Method counts lines in a file.
+       */
         public int getLineCount()
         {
             int count = 0;
             try
             {
-              fileScanner.reset();
+              fileScanner = new Scanner(fileToRead);
+              fileScanner.useDelimiter(",");
               while(fileScanner.hasNextLine())
               {
                 fileScanner.nextLine();
@@ -57,71 +61,85 @@ public class RosterReader
 
               // Reset your scanner at the end, so when you're done counting the lines
               // the reader goes back to the first line. 
-              fileScanner.reset();
+              fileScanner = new Scanner(fileToRead);
+              fileScanner.useDelimiter(",");
             }
             catch(Exception e) 
             {
-                System.out.println("Nigel, fix your code. There's a problem with getLineCount()");
+                System.out.println("Fix your code. There's a problem with getLineCount()");
             }
-            
             return count;
         }
         
+        /*
+         * This method Determines the validity of the data
+         */
         public boolean readNextHero()
-        {
+        { 
           while(fileScanner.hasNextLine())
           {
-            //currentHero = new Hero(); // we defined currentHero as a variable above.
             String line = fileScanner.nextLine();
-            
-            // actually, first we need to validate the data on the line, yeah I was going to say how would we validate?
+            currentHero = new Hero();
             String[] data = line.split(",");
             
             if(data.length != 4) continue; // If all of the data isn't there OR there is too much data, continue on to the next line.
             
+            
             if(data[0] != null)
             {
-            	currentHero.name = data[0];
+                currentHero.setName(data[0]);
             }
-            
             // Read in the birthdate
-            Calendar cal = Calendar.getInstance();
+            Calendar cal = new Calendar();
 
-            try
-            {
-            	int month = Integer.parseInt(data[1]);
+              int month = Integer.parseInt(data[1].trim());
               
               if(month > 0 && month <= 12)
               {
-                cal.set(Calendar.MONTH, month);
+                cal.setMonth(month);
               } else continue;
-
-              int day = Integer.parseInt(data[2]); 
+              
+              boolean invalid = false;
+              String temp = data[2];
+              //Take our current string, and check to see if anything in that string is in the alphabet. If it is, data[2] is invalid.
+              for(int i = 0; i < 26; i++){
+                  for(int j = 0; j < temp.length(); j++){
+                      if (temp.charAt(j) == abc[i]){
+                          invalid = true;
+                      }
+                  }
+              }
+              
+              if(invalid == true){
+                  continue;
+              }
+                      
+              int day = Integer.parseInt(data[2].trim()); 
               if(day > 0 && day <= 31) 
               {
-                cal.set(Calendar.DAY_OF_MONTH, day);
+                cal.setDate(day);
               }
-
-              int year = Integer.parseInt(data[3]);
-              cal.set(Calendar.YEAR, year);
-              
-            }
-            catch(NumberFormatException e) {
-            	continue; // move on to the next line
-            }
-            
-            currentHero.date = cal;
-            currentHero = new Hero(data);
+    
+            int year = Integer.parseInt(data[3].trim());
+            cal.setYear(year);
+            currentHero.calendar = cal;
+            currentHero = new Hero(data[0].trim(), year, month, day);
             return true;
           }
           return false;
         }
         
+        /*
+         * Method to return valid heros.
+         */
         public Hero getCurrentHero()
         {
             return currentHero;
         }  
      
+        /*
+         * Method to close the file.
+         */
         public void close() throws IOException
         {
            //Closes the file.
